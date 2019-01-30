@@ -21,6 +21,7 @@ describe('express-middleware', () => {
       middleware = createExpressMiddleware(registry, 1);
       app = express();
       app.use(middleware);
+      app.use(express.json());
 
       app.get('/hello', (req, res) => res.send('Hello World!'));
       app.post('/world', (req, res) => res.status(201).send('Hello World!'));
@@ -82,8 +83,15 @@ describe('express-middleware', () => {
 
 const callLocalHost = (port, endpoint, method) => {
   return new Promise((resolve, reject) => {
+    const options = {protocol: `http:`,
+                     host: `127.0.0.1`,
+                     port: `${port}`, 
+                     path: `/${endpoint}`, 
+                     method: (method || 'GET'),
+                     headers: { 'Content-Type': 'application/json' }
+                    };
     http
-      .request({protocol: `http:`, host: `127.0.0.1`, port: `${port}`, path: `/${endpoint}`, 'method': (method || 'GET')}, resp => {
+      .request(options, resp => {
         let data = '';
         resp.on('data', chunk => {
           data += chunk;
