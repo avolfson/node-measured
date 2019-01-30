@@ -83,7 +83,7 @@ describe('express-middleware', () => {
 const callLocalHost = (port, endpoint, method) => {
   return new Promise((resolve, reject) => {
     http
-      .request(`http://127.0.0.1:${port}/${endpoint}`, {'method' : method || 'GET'}, resp => {
+      .request({port: `${port}`, path: `/${endpoint}`, 'method' : method || 'GET'}, resp => {
         let data = '';
         resp.on('data', chunk => {
           data += chunk;
