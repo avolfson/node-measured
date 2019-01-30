@@ -55,7 +55,7 @@ describe('createExpressMiddleware', () => {
     middleware(
       {
         method: 'GET',
-        routine: {path, '/v1/rest/some-end-point'};
+        routine: {path: '/v1/rest/some-end-point'};
       },
       res,
       () => {}
