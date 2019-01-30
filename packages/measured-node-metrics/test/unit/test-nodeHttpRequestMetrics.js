@@ -6,15 +6,15 @@ const { createExpressMiddleware, onRequestStart, onRequestEnd } = require('../..
 const TestReporter = require('./TestReporter');
 const Registry = require('measured-reporting').SelfReportingMetricsRegistry;
 
-class MockRequest extends EventEmitter {
+class MockResponse extends EventEmitter {
   constructor() {
     super();
     this.method = 'GET';
     this.path = '/v1/rest/some-end-point';
   }
 
-  end() {
-    this.emit('end');
+  finish() {
+    this.emit('finish');
   }
 }
 
@@ -52,15 +52,15 @@ describe('createExpressMiddleware', () => {
 
     const middleware = createExpressMiddleware(registry);
 
-    const req = new MockRequest();
+    const res = new MockResponse();
     middleware(
-      req,
+      res,
       {
         statusCode: 200
       },
       () => {}
     );
-    req.end();
+    res.finish();
 
     const registeredKeys = registry._registry.allKeys();
     assert(registeredKeys.length === 1);
