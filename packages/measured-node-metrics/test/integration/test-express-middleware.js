@@ -23,7 +23,6 @@ describe('express-middleware', () => {
       app.use(middleware);
 
       app.get('/hello', (req, res) => res.send('Hello World!'));
-      app.post('/world', (req, res) => res.status(201).send('Hello World!'));
       app.get('/users/:userId', (req, res) => {
         res.send(`id: ${req.params.userId}`);
       });
@@ -55,19 +54,6 @@ describe('express-middleware', () => {
       assert.deepEqual(dimensions, { statusCode: '200', method: 'GET', uri: '/hello' });
     });
   });
-  
-  it('creates a single timer that has 1 count for requests, when an http POST call is made once', () => {
-    return callLocalHost(port, 'world', 'POST').then(() => {
-      const registeredKeys = registry._registry.allKeys();
-      assert(registeredKeys.length === 1);
-      assert.equal(registeredKeys[0], 'requests-POST-201-/world');
-      const metricWrapper = registry._registry.getMetricWrapperByKey('requests-POST-201-/world');
-      const name = metricWrapper.name;
-      const dimensions = metricWrapper.dimensions;
-      assert.equal(name, 'requests');
-      assert.deepEqual(dimensions, { statusCode: '201', method: 'POST', uri: '/world' });
-    });
-  });
 
   it('does not create runaway n metrics in the registry for n ids in the path', () => {
     return Promise.all([
@@ -83,7 +69,7 @@ describe('express-middleware', () => {
 const callLocalHost = (port, endpoint, method) => {
   return new Promise((resolve, reject) => {
     http
-      .request({port: `${port}`, path: `/${endpoint}`, 'method' : method || 'GET'}, resp => {
+      .request({port: `${port}`, path: `/${endpoint}`, 'method': (method || 'GET')}, resp => {
         let data = '';
         resp.on('data', chunk => {
           data += chunk;
