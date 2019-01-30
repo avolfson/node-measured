@@ -9,8 +9,7 @@ const Registry = require('measured-reporting').SelfReportingMetricsRegistry;
 class MockResponse extends EventEmitter {
   constructor() {
     super();
-    this.method = 'GET';
-    this.path = '/v1/rest/some-end-point';
+    this.statusCode = 200;
   }
 
   finish() {
@@ -54,10 +53,11 @@ describe('createExpressMiddleware', () => {
 
     const res = new MockResponse();
     middleware(
-      res,
       {
-        statusCode: 200
+        method: 'GET',
+        routine: {path, '/v1/rest/some-end-point'};
       },
+      res,
       () => {}
     );
     res.finish();
