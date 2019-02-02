@@ -82,14 +82,14 @@ describe('express-middleware', () => {
   });
 });
 
-const callLocalHost = (port, endpoint, options={}) => {
+const callLocalHost = (port, endpoint, options) => {
   return new Promise((resolve, reject) => {
     const options = Object.assign({protocol: `http:`,
                                    host: `127.0.0.1`,
                                    port: `${port}`, 
                                    path: `/${endpoint}`, 
                                    method: 'GET'},
-                                  options);
+                                  options || {});
     http
       .request(options, resp => {
         let data = '';
