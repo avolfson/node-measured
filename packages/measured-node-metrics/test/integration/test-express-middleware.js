@@ -58,7 +58,7 @@ describe('express-middleware', () => {
   });
 
   it('creates a single timer that has 1 count for requests, when an http POST call is made once', () => {
-    const options = {method: 'POST', headers: { 'Content-Type': 'application/json' }};
+    const options = {method: 'POST', headers: {'Content-Type': 'application/json'}};
     return callLocalHost(port, 'world', options).then(() => {
       const registeredKeys = registry._registry.allKeys();
       assert(registeredKeys.length === 1);
@@ -82,7 +82,7 @@ describe('express-middleware', () => {
   });
 });
 
-const callLocalHost = (port, endpoint, options) => {
+const callLocalHost = (port, endpoint, options={}) => {
   return new Promise((resolve, reject) => {
     const options = Object.assign({protocol: `http:`,
                                    host: `127.0.0.1`,
